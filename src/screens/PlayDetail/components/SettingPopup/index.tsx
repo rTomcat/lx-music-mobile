@@ -6,8 +6,6 @@ import { useI18n } from '@/lang'
 import SettingLyricProgress from './settings/SettingLyricProgress'
 import SettingVolume from './settings/SettingVolume'
 import SettingPlaybackRate from './settings/SettingPlaybackRate'
-import SettingLrcFontSize from './settings/SettingLrcFontSize'
-import SettingLrcAlign from './settings/SettingLrcAlign'
 
 export interface SettingPopupProps extends Omit<PopupProps, 'children'> {
   direction: 'vertical' | 'horizontal'
@@ -45,8 +43,6 @@ export default forwardRef<SettingPopupType, SettingPopupProps>(({ direction, ...
               <SettingLyricProgress />
               <SettingVolume />
               <SettingPlaybackRate />
-              <SettingLrcFontSize direction={direction} />
-              <SettingLrcAlign />
             </View>
           </ScrollView>
         </Popup>

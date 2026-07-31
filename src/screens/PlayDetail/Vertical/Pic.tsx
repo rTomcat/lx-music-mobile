@@ -29,11 +29,11 @@ export default ({ componentId }: { componentId: string }) => {
   // console.log('render pic')
 
   const style = useMemo(() => {
-    const imgWidth = Math.min(winWidth * 0.8, (winHeight - statusBarHeight - HEADER_HEIGHT) * 0.5)
+    const imgWidth = Math.min(winWidth * 0.92, (winHeight - statusBarHeight - HEADER_HEIGHT) * 0.58)
     return {
       width: imgWidth,
       height: imgWidth,
-      borderRadius: 2,
+      borderRadius: 12,
     }
   }, [statusBarHeight, winHeight, winWidth])
 
@@ -50,8 +50,9 @@ const styles = createStyle({
   container: {
     flexGrow: 1,
     flexShrink: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
+    paddingBottom: 8,
     // backgroundColor: 'rgba(0,0,0,0.1)',
   },
   content: {

@@ -123,9 +123,7 @@ export const MUSIC_TOGGLE_MODE = {
 export const MUSIC_TOGGLE_MODE_LIST = [
   MUSIC_TOGGLE_MODE.listLoop,
   MUSIC_TOGGLE_MODE.random,
-  MUSIC_TOGGLE_MODE.list,
   MUSIC_TOGGLE_MODE.singleLoop,
-  MUSIC_TOGGLE_MODE.none,
 ] as const
 
 export const DEFAULT_SETTING = {

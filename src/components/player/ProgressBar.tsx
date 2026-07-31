@@ -8,16 +8,17 @@ import { Icon } from '@/components/common/Icon'
 // import { AppColors } from '@/theme'
 
 
-const DefaultBar = memo(() => {
+const DefaultBar = memo(({ white }: { white?: boolean }) => {
   const theme = useTheme()
-
-  return <View style={{ ...styles.progressBar, backgroundColor: theme['c-primary-light-300-alpha-800'], position: 'absolute', width: '100%', left: 0, top: 0 }}></View>
+  const backgroundColor = white ? 'rgba(255,255,255,0.25)' : theme['c-primary-light-300-alpha-800']
+  return <View style={{ ...styles.progressBar, backgroundColor, position: 'absolute', width: '100%', left: 0, top: 0 }}></View>
 })
 
-const BufferedBar = memo(({ progress }: { progress: number }) => {
+const BufferedBar = memo(({ progress, white }: { progress: number, white?: boolean }) => {
   // console.log(bufferedProgress)
   const theme = useTheme()
-  return <View style={{ ...styles.progressBar, backgroundColor: theme['c-primary-light-400-alpha-700'], position: 'absolute', width: `${progress * 100}%`, left: 0, top: 0 }}></View>
+  const backgroundColor = white ? 'rgba(255,255,255,0.4)' : theme['c-primary-light-400-alpha-700']
+  return <View style={{ ...styles.progressBar, backgroundColor, position: 'absolute', width: `${progress * 100}%`, left: 0, top: 0 }}></View>
 })
 
 
@@ -62,10 +63,11 @@ const PreassBar = memo(({ onDragState, setDragProgress, onSetProgress }: {
 })
 
 
-const Progress = ({ progress, duration, buffered }: {
+const Progress = ({ progress, duration, buffered, white }: {
   progress: number
   duration: number
   buffered: number
+  white?: boolean
 }) => {
   // const { progress: bufferProgress } = usePlayTimeBuffer()
   const theme = useTheme()
@@ -91,23 +93,29 @@ const Progress = ({ progress, duration, buffered }: {
     global.app_event.setProgress(progress * durationRef.current)
   }, [])
 
+  // white 模式：进度条用白色系；否则用主题色
+  const progressColor = white ? '#ffffff' : theme['c-primary-light-100-alpha-400']
+  const dragColor = white ? '#ffffff' : theme['c-primary-light-100-alpha-700']
+  const dragBgColor = white ? 'rgba(255,255,255,0.7)' : theme['c-primary-light-100-alpha-600']
+  const dotColor = white ? '#ffffff' : theme['c-primary-light-100']
+
   return (
     <View style={styles.progress}>
       <View>
-        <DefaultBar />
-        <BufferedBar progress={buffered} />
+        <DefaultBar white={white} />
+        <BufferedBar progress={buffered} white={white} />
         {
           draging
             ? (
                 <>
-                  <View style={{ ...styles.progressBar, backgroundColor: theme['c-primary-light-100-alpha-700'], width: progressStr, position: 'absolute', left: 0, top: 0 }} />
-                  <View style={{ ...styles.progressBar, backgroundColor: theme['c-primary-light-100-alpha-600'], width: `${dragProgress * 100}%`, position: 'absolute', left: 0, top: 0 }}>
-                    <Icon name="full_stop" color={theme['c-primary-light-100']} rawSize={progressDotSize} style={progressDotStyle} />
+                  <View style={{ ...styles.progressBar, backgroundColor: dragColor, width: progressStr, position: 'absolute', left: 0, top: 0 }} />
+                  <View style={{ ...styles.progressBar, backgroundColor: dragBgColor, width: `${dragProgress * 100}%`, position: 'absolute', left: 0, top: 0 }}>
+                    <Icon name="full_stop" color={dotColor} rawSize={progressDotSize} style={progressDotStyle} />
                   </View>
                 </>
               ) : (
-                <View style={{ ...styles.progressBar, backgroundColor: theme['c-primary-light-100-alpha-400'], width: progressStr, position: 'absolute', left: 0, top: 0 }}>
-                  <Icon name="full_stop" color={theme['c-primary-light-100']} rawSize={progressDotSize} style={progressDotStyle} />
+                <View style={{ ...styles.progressBar, backgroundColor: progressColor, width: progressStr, position: 'absolute', left: 0, top: 0 }}>
+                  <Icon name="full_stop" color={dotColor} rawSize={progressDotSize} style={progressDotStyle} />
                 </View>
               )
         }

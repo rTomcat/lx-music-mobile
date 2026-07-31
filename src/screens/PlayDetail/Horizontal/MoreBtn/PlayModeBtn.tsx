@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react'
+import { memo, useEffect, useMemo } from 'react'
 import { toast } from '@/utils/tools'
 import { MUSIC_TOGGLE_MODE_LIST, MUSIC_TOGGLE_MODE } from '@/config/constant'
 import { useSettingValue } from '@/store/setting/hook'
@@ -11,52 +11,37 @@ export default memo(() => {
   const togglePlayMethod = useSettingValue('player.togglePlayMethod')
   const t = useI18n()
 
-  const toggleNextPlayMode = () => {
-    let index = MUSIC_TOGGLE_MODE_LIST.indexOf(togglePlayMethod)
-    if (++index >= MUSIC_TOGGLE_MODE_LIST.length) index = 0
-    const mode = MUSIC_TOGGLE_MODE_LIST[index]
-    updateSetting({ 'player.togglePlayMethod': mode })
-    let modeName: 'play_list_loop' | 'play_list_random' | 'play_list_order' | 'play_single_loop' | 'play_single'
-    switch (mode) {
-      case MUSIC_TOGGLE_MODE.listLoop:
-        modeName = 'play_list_loop'
-        break
-      case MUSIC_TOGGLE_MODE.random:
-        modeName = 'play_list_random'
-        break
-      case MUSIC_TOGGLE_MODE.list:
-        modeName = 'play_list_order'
-        break
-      case MUSIC_TOGGLE_MODE.singleLoop:
-        modeName = 'play_single_loop'
-        break
-      default:
-        modeName = 'play_single'
-        break
+  // 若当前是已移除的模式（顺序播放 list / 不循环 none），自动回退到列表循环
+  useEffect(() => {
+    if (togglePlayMethod == MUSIC_TOGGLE_MODE.list || togglePlayMethod == MUSIC_TOGGLE_MODE.none) {
+      updateSetting({ 'player.togglePlayMethod': MUSIC_TOGGLE_MODE.listLoop })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [togglePlayMethod])
+
+  const toggleNextPlayMode = () => {
+    const modes = MUSIC_TOGGLE_MODE_LIST
+    let index = modes.findIndex(m => m === togglePlayMethod)
+    if (++index >= modes.length) index = 0
+    const mode = modes[index]
+    updateSetting({ 'player.togglePlayMethod': mode })
+    const modeName = mode == MUSIC_TOGGLE_MODE.random
+      ? 'play_list_random'
+      : mode == MUSIC_TOGGLE_MODE.singleLoop
+        ? 'play_single_loop'
+        : 'play_list_loop'
     toast(t(modeName))
   }
 
   const playModeIcon = useMemo(() => {
-    let playModeIcon = null
     switch (togglePlayMethod) {
-      case MUSIC_TOGGLE_MODE.listLoop:
-        playModeIcon = 'list-loop'
-        break
       case MUSIC_TOGGLE_MODE.random:
-        playModeIcon = 'list-random'
-        break
-      case MUSIC_TOGGLE_MODE.list:
-        playModeIcon = 'list-order'
-        break
+        return 'list-random'
       case MUSIC_TOGGLE_MODE.singleLoop:
-        playModeIcon = 'single-loop'
-        break
+        return 'single-loop'
       default:
-        playModeIcon = 'single'
-        break
+        return 'list-loop'
     }
-    return playModeIcon
   }, [togglePlayMethod])
 
   return <Btn icon={playModeIcon} onPress={toggleNextPlayMode} />

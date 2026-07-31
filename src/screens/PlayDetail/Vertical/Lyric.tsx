@@ -71,16 +71,17 @@ const LrcLine = memo(({ line, lineNum, activeLine, onLayout }: LineProps) => {
 
   const colors = useMemo(() => {
     const active = activeLine == lineNum
+    // Apple 风格：当前行纯白加粗，其他行半透明白
     return active ? [
-      theme['c-primary'],
-      theme['c-primary-alpha-200'],
+      '#ffffff',
+      'rgba(255,255,255,0.85)',
       1,
     ] as const : [
-      theme['c-350'],
-      theme['c-300'],
-      0.6,
+      '#ffffff',
+      'rgba(255,255,255,0.6)',
+      0.4,
     ] as const
-  }, [activeLine, lineNum, theme])
+  }, [activeLine, lineNum])
 
   const handleLayout = ({ nativeEvent }: LayoutChangeEvent) => {
     onLayout(lineNum, nativeEvent.layout.height, nativeEvent.layout.width)
@@ -95,6 +96,7 @@ const LrcLine = memo(({ line, lineNum, activeLine, onLayout }: LineProps) => {
         ...styles.lineText,
         textAlign,
         lineHeight,
+        fontWeight: activeLine == lineNum ? 'bold' : 'normal',
       }} textBreakStrategy="simple" color={colors[0]} opacity={colors[2]} size={size}>{line.text}</AnimatedColorText>
       {
         line.extendedLyrics.map((lrc, index) => {

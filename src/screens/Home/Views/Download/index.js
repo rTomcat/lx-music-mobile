@@ -53,7 +53,7 @@ const DownloadRow = memo(({ item, onPlay, onRemoveRecord, onRemoveFile }) => {
         backgroundColor: isCompleted ? theme['c-primary-light-800-alpha-500'] : 'rgba(0,0,0,0.03)',
       },
     ]}>
-      <Icon name="music" size={16} color={isCompleted ? theme['c-primary-font-active'] : theme['c-primary-font']} />
+      <Icon name="album" size={16} color={isCompleted ? theme['c-primary-font-active'] : theme['c-primary-font']} />
       <View style={styles.rowCenter}>
         <Text numberOfLines={1}>{item.name}</Text>
         <Text size={11} color={theme['c-font-label']} numberOfLines={1}>{subtitle}</Text>
