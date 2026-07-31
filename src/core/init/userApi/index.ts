@@ -4,6 +4,8 @@ import settingState from '@/store/setting/state'
 import BackgroundTimer from 'react-native-background-timer'
 import { fetchData } from './request'
 import { getUserApiList } from '@/utils/data'
+import { ensureBuiltinUserApis } from '@/utils/builtinUserApi'
+import { updateSetting } from '@/core/common'
 import { confirmDialog, openUrl, tipDialog } from '@/utils/tools'
 
 
@@ -252,5 +254,10 @@ export default async(setting: LX.AppSetting) => {
     }
   })
 
+  const defaultApiId = await ensureBuiltinUserApis()
+  if (defaultApiId && !setting['common.apiSource']) {
+    setting['common.apiSource'] = defaultApiId
+    updateSetting({ 'common.apiSource': defaultApiId })
+  }
   setUserApiList(await getUserApiList())
 }

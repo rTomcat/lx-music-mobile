@@ -13,6 +13,9 @@ import { scaleSizeH } from '@/utils/pixelRatio'
 import { Icon } from '@/components/common/Icon'
 import ImageBackground from '@/components/common/ImageBackground'
 
+// 只展示这三个主题（其他主题仍保留在代码中，但不在设置里出现）
+const VISIBLE_THEME_IDS = new Set(['black', 'mid_autumn', 'china_ink'])
+
 const useActive = (id: string) => {
   const activeThemeId = useSettingValue('theme.id')
   const isActive = useMemo(() => activeThemeId == id, [activeThemeId, id])
@@ -74,7 +77,7 @@ interface ThemeInfo {
 }
 const initInfo: ThemeInfo = { themes: [], userThemes: [], dataPath: '' }
 export default memo(() => {
-  const [showAll, setShowAll] = useState(false)
+  const [showAll, setShowAll] = useState(true)
   const t = useI18n()
   const [themeInfo, setThemeInfo] = useState(initInfo)
   const setThemeId = useCallback((id: string) => {
@@ -91,7 +94,7 @@ export default memo(() => {
     <SubTitle title={t('setting_basic_theme')}>
       <View style={styles.list}>
         {
-          themeInfo.themes.map(({ id, config }) => {
+          themeInfo.themes.filter(({ id }) => VISIBLE_THEME_IDS.has(id)).map(({ id, config }) => {
             return <ThemeItem
               key={id}
               color={config.themeColors['c-theme']}
